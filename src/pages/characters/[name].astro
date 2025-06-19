@@ -7,6 +7,7 @@ import {
   getNameLink,
   getUniqueNameTrannsition,
 } from "../../utils";
+import FavoriteBtn from "@/components/FavoriteBtn/FavoriteBtn.astro";
 
 // Para generar las rutas dinamicas, se usa getStaticPaths para definir las rutas permitidas segun el param
 // el resto de las rutas no se generaran y mostraran un 404
@@ -14,10 +15,11 @@ export const getStaticPaths = (async () => {
   const data = await getCharactersList();
   const characters = data.data.results;
 
-  const paths = characters.map(({ name, thumbnail, description }) => {
+  const paths = characters.map(({ name, thumbnail, description, id }) => {
     return {
       params: { name: getNameLink(name) },
       props: {
+        id,
         nameCharacter: name,
         thumbnail,
         description: description || "No description available",
@@ -29,7 +31,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const { name } = Astro.params;
-const { nameCharacter, thumbnail, description } = Astro.props;
+const { nameCharacter, thumbnail, description, id } = Astro.props;
 ---
 
 <MainLayout
@@ -38,10 +40,19 @@ const { nameCharacter, thumbnail, description } = Astro.props;
   image={getImageUrl(thumbnail.path, thumbnail.extension)}
 >
   <section class="">
-    <a href="/" class="text-blue-500 hover:underline mb-4 inline-block">
+    <button
+      class="text-blue-500 hover:underline mb-4 inline-block"
+      onclick="history.back()"
+    >
       Regresar
-    </a>
-    <h1 class="text-3xl font-bold mb-4">Character Details: {nameCharacter}</h1>
+    </button>
+    <div class="flex flex-row align-center items-center gap-4 mb-4">
+      <FavoriteBtn name={nameCharacter} id={id} />
+
+      <h1 class="text-3xl font-bold">
+        Character Details: {nameCharacter}
+      </h1>
+    </div>
 
     <img
       src={`${getImageUrl(thumbnail.path, thumbnail.extension)}`}

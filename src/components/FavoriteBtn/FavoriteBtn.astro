@@ -1,0 +1,46 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  name: string;
+  id: number;
+}
+
+const { name, id } = Astro.props as Props;
+---
+
+<div class="relative group">
+  <button
+    id="favorite-button"
+    class="text-red-500 hover:text-red-700 hover:scale-110 transition-transform hover:cursor-pointer"
+    data-favorite-id={id}
+    data-favorite-name={name}
+  >
+    <Icon name="star" size={30} />
+    <Icon name="star-fill" size={30} class="hidden" />
+  </button>
+
+  <span
+    class="absolute left-1/2 -translate-x-1/2 -top-8 px-2 py-1 rounded bg-gray-800 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 whitespace-nowrap"
+  >
+    Add to Favorites
+  </span>
+</div>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const btnFavorite = document.querySelector(
+      "#favorite-button"
+    ) as HTMLButtonElement;
+
+    if (!btnFavorite) return console.error("Favorite button not found");
+
+    const nameCharacter = btnFavorite.getAttribute("data-favorite-name");
+    const idCharacter = btnFavorite.getAttribute("data-favorite-id");
+    btnFavorite.addEventListener("click", () => {
+      console.log(
+        `Favorite button clicked for character: ${nameCharacter} (ID: ${idCharacter})`
+      );
+    });
+  });
+</script>

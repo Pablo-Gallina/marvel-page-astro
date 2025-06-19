@@ -1,11 +1,39 @@
 ---
+import ItemNav from "./ItemNav.astro";
 
+const items = [
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Pages",
+    href: "/characters/1",
+  },
+  {
+    label: "Favorites",
+    href: "/favorites",
+  },
+];
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => currentPath === href;
 ---
 
-<nav class="navbar">
-  <ul>
-    <li><a href="/">Home</a></li>
-    <li><a href="/about">About</a></li>
-    <li><a href="/contact">Contact</a></li>
+<nav class="navbar py-4 font-black mx-auto">
+  <ul class="flex space-x-8 justify-center">
+    {
+      items.map((item) => {
+        const isActiveItem = isActive(item.href);
+
+        return (
+          <div>
+            <ItemNav isActive={isActiveItem} href={item.href}>
+              {item.label}
+            </ItemNav>
+          </div>
+        );
+      })
+    }
   </ul>
 </nav>
