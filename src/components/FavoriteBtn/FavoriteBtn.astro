@@ -1,12 +1,12 @@
 ---
 import { Icon } from "astro-icon/components";
 
-interface Props {
+interface FavoriteProps {
   name: string;
   id: number;
 }
 
-const { name, id } = Astro.props as Props;
+const { name, id } = Astro.props as FavoriteProps;
 ---
 
 <div class="relative group">
@@ -16,8 +16,8 @@ const { name, id } = Astro.props as Props;
     data-favorite-id={id}
     data-favorite-name={name}
   >
-    <Icon name="star" size={30} />
-    <Icon name="star-fill" size={30} class="hidden" />
+    <Icon data-pin name="star" size={30} />
+    <Icon data-unpin name="star-fill" size={30} class="hidden" />
   </button>
 
   <span
@@ -28,19 +28,67 @@ const { name, id } = Astro.props as Props;
 </div>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  interface FavoriteProps {
+    name: string;
+    id: number;
+  }
+
+  const handlePageLoad = () => {
+    let favoriteCharacter: FavoriteProps[] = JSON.parse(
+      localStorage.getItem("favoriteCharacters") || "[]"
+    );
+
     const btnFavorite = document.querySelector(
       "#favorite-button"
     ) as HTMLButtonElement;
 
     if (!btnFavorite) return console.error("Favorite button not found");
 
-    const nameCharacter = btnFavorite.getAttribute("data-favorite-name");
-    const idCharacter = btnFavorite.getAttribute("data-favorite-id");
-    btnFavorite.addEventListener("click", () => {
-      console.log(
-        `Favorite button clicked for character: ${nameCharacter} (ID: ${idCharacter})`
+    const nameCharacter = btnFavorite.getAttribute("data-favorite-name")!;
+    const idCharacter = btnFavorite.getAttribute("data-favorite-id")!;
+
+    const toggleFavorite = () => {
+      const isFavorite = favoriteCharacter.some(
+        (char) =>
+          char.name === nameCharacter && char.id === parseInt(idCharacter)
       );
+
+      if (isFavorite) {
+        favoriteCharacter = favoriteCharacter.filter(
+          (char) =>
+            !(char.name === nameCharacter && char.id === parseInt(idCharacter))
+        );
+      } else {
+        favoriteCharacter.push({
+          name: nameCharacter,
+          id: +idCharacter,
+        });
+      }
+
+      localStorage.setItem(
+        "favoriteCharacters",
+        JSON.stringify(favoriteCharacter)
+      );
+    };
+
+    const pinIcon = btnFavorite.querySelector("[data-pin]") as HTMLElement;
+    const unpinIcon = btnFavorite.querySelector("[data-unpin]") as HTMLElement;
+
+    const isFavorite = favoriteCharacter.some(
+      (char) => char.name === nameCharacter && char.id === parseInt(idCharacter)
+    );
+    if (isFavorite) {
+      pinIcon.classList.add("hidden");
+      unpinIcon.classList.remove("hidden");
+    }
+
+    btnFavorite.addEventListener("click", () => {
+      pinIcon.classList.toggle("hidden");
+      unpinIcon.classList.toggle("hidden");
+
+      toggleFavorite();
     });
-  });
+  };
+
+  document.addEventListener("astro:page-load", handlePageLoad);
 </script>
