@@ -1,5 +1,8 @@
 ---
+import { Counter } from "@/components/Counter";
 import MainLayout from "@/layouts/MainLayout.astro";
+
+const CounterValue = 1;
 ---
 
 <MainLayout title="Favorites">
@@ -16,5 +19,12 @@ import MainLayout from "@/layouts/MainLayout.astro";
     <p class="text-center col-span-full">
       Coming soon! This page will display your favorite characters.
     </p>
+
+    <Counter
+      transition:persist="counter"
+      transition:persist-props
+      client:load
+      initValue={CounterValue}
+    />
   </section>
 </MainLayout>
