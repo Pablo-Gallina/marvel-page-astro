@@ -1,12 +1,8 @@
 ---
+import type { FavoriteProps } from "@/interfaces/favorite-character";
 import { Icon } from "astro-icon/components";
 
-interface FavoriteProps {
-  name: string;
-  id: number;
-}
-
-const { name, id } = Astro.props as FavoriteProps;
+const { name, id, thumbnail } = Astro.props as FavoriteProps;
 ---
 
 <div class="relative group">
@@ -15,6 +11,7 @@ const { name, id } = Astro.props as FavoriteProps;
     class="text-red-500 hover:text-red-700 hover:scale-110 transition-transform hover:cursor-pointer"
     data-favorite-id={id}
     data-favorite-name={name}
+    data-favorite-thumbnail={JSON.stringify(thumbnail)}
   >
     <Icon data-pin name="star" size={30} />
     <Icon data-unpin name="star-fill" size={30} class="hidden" />
@@ -28,10 +25,7 @@ const { name, id } = Astro.props as FavoriteProps;
 </div>
 
 <script>
-  interface FavoriteProps {
-    name: string;
-    id: number;
-  }
+  import type { FavoriteProps } from "@/interfaces/favorite-character";
 
   const handlePageLoad = () => {
     let favoriteCharacter: FavoriteProps[] = JSON.parse(
@@ -46,6 +40,9 @@ const { name, id } = Astro.props as FavoriteProps;
 
     const nameCharacter = btnFavorite.getAttribute("data-favorite-name")!;
     const idCharacter = btnFavorite.getAttribute("data-favorite-id")!;
+    const thumbnailCharacter = JSON.parse(
+      btnFavorite.getAttribute("data-favorite-thumbnail")!
+    );
 
     const toggleFavorite = () => {
       const isFavorite = favoriteCharacter.some(
@@ -62,6 +59,7 @@ const { name, id } = Astro.props as FavoriteProps;
         favoriteCharacter.push({
           name: nameCharacter,
           id: +idCharacter,
+          thumbnail: thumbnailCharacter,
         });
       }
 

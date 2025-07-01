@@ -1,6 +1,7 @@
 ---
-import { Counter } from "@/components/Counter";
+// import { Counter } from "@/components/Counter";
 import MainLayout from "@/layouts/MainLayout.astro";
+import { FavoriteList } from "./FavoriteList";
 
 const CounterValue = 1;
 ---
@@ -12,19 +13,14 @@ const CounterValue = 1;
     My Favorite Characters
   </h1>
 
-  <section
-    aria-label="list of favorite characters"
-    class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-12"
-  >
-    <p class="text-center col-span-full">
-      Coming soon! This page will display your favorite characters.
-    </p>
+  <section aria-label="list of favorite characters">
+    <FavoriteList client:only="solid-js" />
 
-    <Counter
+    <!-- <Counter
       transition:persist="counter"
       transition:persist-props
       client:load
       initValue={CounterValue}
-    />
+    /> -->
   </section>
 </MainLayout>

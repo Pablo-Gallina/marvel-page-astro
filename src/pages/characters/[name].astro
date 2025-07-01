@@ -47,7 +47,7 @@ const { nameCharacter, thumbnail, description, id } = Astro.props;
       Regresar
     </button>
     <div class="flex flex-row align-center items-center gap-4 mb-4">
-      <FavoriteBtn name={nameCharacter} id={id} />
+      <FavoriteBtn name={nameCharacter} id={id} thumbnail={thumbnail} />
 
       <h1 class="text-3xl font-bold">
         Character Details: {nameCharacter}
